@@ -46,8 +46,7 @@ Run `hifi-rs --help` or `hifi-rs <subcommand> --help` to see all available optio
 To get started:
 
 ```shell
-hifi-rs config username # enter username at prompt
-hifi-rs config password # enter password at prompt
+hifi-rs oauth # sign in via browser (OAuth)
 hifi-rs config default-quality <quality> # mp3, cd, hifi96 or hifi192
 
 # play from the command line
