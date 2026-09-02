@@ -6,7 +6,12 @@ type Result<T, E = hifirs_qobuz_api::Error> = std::result::Result<T, E>;
 
 /// Perform an interactive OAuth login: open the browser, capture the
 /// authorization code from the redirect, exchange it for a token and persist it.
-pub async fn login(client: &mut QobuzClient) -> Result<()> {
+pub async fn login(
+    client: &mut QobuzClient,
+    bind: &str,
+    advertise: Option<&str>,
+    no_browser: bool,
+) -> Result<()> {
     if client.get_app_id().is_none() || client.get_private_key().is_none() {
         client.refresh().await?;
 
@@ -21,7 +26,7 @@ pub async fn login(client: &mut QobuzClient) -> Result<()> {
 
     let app_id = client.get_app_id().cloned().ok_or(hifirs_qobuz_api::Error::AppID)?;
 
-    let code = capture_authorization_code(&app_id).await?;
+    let code = capture_authorization_code(&app_id, bind, advertise, no_browser).await?;
 
     client.login_with_oauth_code(&code).await?;
 
@@ -32,8 +37,14 @@ pub async fn login(client: &mut QobuzClient) -> Result<()> {
     Ok(())
 }
 
-async fn capture_authorization_code(app_id: &str) -> Result<String> {
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:0")
+async fn capture_authorization_code(
+    app_id: &str,
+    bind: &str,
+    advertise: Option<&str>,
+    no_browser: bool,
+) -> Result<String> {
+    let bind_addr = format!("{bind}:0");
+    let listener = tokio::net::TcpListener::bind(&bind_addr)
         .await
         .map_err(|error| hifirs_qobuz_api::Error::Api {
             message: error.to_string(),
@@ -43,7 +54,8 @@ async fn capture_authorization_code(app_id: &str) -> Result<String> {
         message: error.to_string(),
     })?;
 
-    let redirect_url = format!("http://{addr}");
+    let host = advertise.unwrap_or(bind);
+    let redirect_url = format!("http://{host}:{port}", port = addr.port());
     let signin_url = format!(
         "https://www.qobuz.com/signin/oauth?ext_app_id={app_id}&redirect_url={redirect_url}"
     );
@@ -51,8 +63,12 @@ async fn capture_authorization_code(app_id: &str) -> Result<String> {
     info!("sign in to Qobuz by opening: {signin_url}");
     println!("Sign in to Qobuz by opening: {signin_url}");
 
-    if let Err(error) = webbrowser::open(&signin_url) {
-        warn!("failed to open browser automatically: {error}");
+    if !no_browser {
+        if let Err(error) = webbrowser::open(&signin_url) {
+            warn!("failed to open browser automatically: {error}");
+        }
+    } else {
+        info!("auto-open disabled; open this URL manually: {signin_url}");
     }
 
     let (mut stream, _) = listener.accept().await.map_err(|error| {

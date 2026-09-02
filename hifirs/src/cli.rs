@@ -73,7 +73,18 @@ enum Commands {
         command: ConfigCommands,
     },
     /// Authenticate with Qobuz via OAuth (browser-based)
-    Oauth {},
+    Oauth {
+        #[clap(long, default_value = "127.0.0.1")]
+        /// Interface the local callback listener binds to. Use 0.0.0.0 for LAN access.
+        bind: String,
+        #[clap(long)]
+        /// Host/IP placed in the redirect URL so other machines can reach the callback.
+        /// Defaults to the bound address.
+        advertise: Option<String>,
+        #[clap(long, default_value_t = false)]
+        /// Do not attempt to open the sign-in URL in a web browser automatically.
+        no_browser: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -367,8 +378,8 @@ pub async fn run() -> Result<(), Error> {
             db::clear_state().await;
             Ok(())
         }
-        Commands::Oauth {} => {
-            qobuz::oauth_login().await?;
+        Commands::Oauth { bind, advertise, no_browser, } => {
+            qobuz::oauth_login(&bind, advertise.as_deref(), no_browser).await?;
 
             println!("Signed in successfully.");
 
