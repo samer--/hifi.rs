@@ -109,6 +109,19 @@ impl CursiveUI {
                         .scrollable()
                         .show_scrollbars(false)
                         .scroll_x(true),
+                )
+                .child(
+                    TextView::new("")
+                        .style(Style::primary().combine(Effect::Dim))
+                        .with_name("current_track_id"),
+                )
+                .child(
+                    TextView::new("")
+                        .style(Style::primary().combine(Effect::Dim))
+                        .with_name("current_track_url"),
+                        // .scrollable()
+                        // .show_scrollbars(false)
+                        // .scroll_x(true),
                 ),
         )
         .resized(SizeConstraint::Full, SizeConstraint::Free);
@@ -242,6 +255,32 @@ impl CursiveUI {
 
         self.root.add_global_callback('-', move |_| {
             block_on(async { player::change_volume(-0.05).await.expect("") });
+        });
+
+        self.root.add_global_callback('c', move |_| {
+            block_on(async {
+                if let Some(track) = player::current_track().await {
+                    if let Some(url) = &track.track_url {
+                        let url = url.clone();
+                        tokio::spawn(async move {
+                            use std::process::Command;
+                            Command::new("xclip")
+                                .arg("-selection")
+                                .arg("primary")
+                                .stdin(std::process::Stdio::piped())
+                                .spawn()
+                                .and_then(|mut c| {
+                                    use std::io::Write;
+                                    c.stdin.as_mut().unwrap().write_all(url.as_bytes())?;
+                                    drop(c.stdin.take());
+                                    c.wait()
+                                })
+                                .map_err(|e| debug!("xclip failed: {e}"))
+                                .ok();
+                        });
+                    }
+                }
+            });
         });
     }
 
@@ -780,6 +819,21 @@ fn set_current_track(s: &mut Cursive, track: &Track, lt: &TrackListType) {
 
         track_title.set_content(track.title.trim());
         progress.set_max(track.duration_seconds as usize);
+    }
+
+    s.call_on_name("current_track_id", |v: &mut TextView| {
+        v.set_content(format!("ID {}", track.id));
+    });
+
+    if let Some(url) = &track.track_url {
+        s.call_on_name("current_track_url", |v: &mut TextView| {
+            v.set_content(url.clone());
+        });
+    } else {
+        s.call_on_name("current_track_url", |v: &mut TextView| {
+            v.set_content("<no URL>");
+            // v.set_content(String::new());
+        });
     }
 
     if let Some(artist) = &track.artist {
