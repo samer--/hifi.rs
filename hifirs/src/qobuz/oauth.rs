@@ -6,12 +6,7 @@ type Result<T, E = hifirs_qobuz_api::Error> = std::result::Result<T, E>;
 
 /// Perform an interactive OAuth login: open the browser, capture the
 /// authorization code from the redirect, exchange it for a token and persist it.
-pub async fn login(
-    client: &mut QobuzClient,
-    bind: &str,
-    advertise: Option<&str>,
-    no_browser: bool,
-) -> Result<()> {
+pub async fn login(client: &mut QobuzClient, advertise: Option<&str>) -> Result<()> {
     if client.get_app_id().is_none() || client.get_private_key().is_none() {
         client.refresh().await?;
 
@@ -26,7 +21,7 @@ pub async fn login(
 
     let app_id = client.get_app_id().cloned().ok_or(hifirs_qobuz_api::Error::AppID)?;
 
-    let code = capture_authorization_code(&app_id, bind, advertise, no_browser).await?;
+    let code = capture_authorization_code(&app_id, advertise).await?;
 
     client.login_with_oauth_code(&code).await?;
 
@@ -39,10 +34,11 @@ pub async fn login(
 
 async fn capture_authorization_code(
     app_id: &str,
-    bind: &str,
     advertise: Option<&str>,
-    no_browser: bool,
 ) -> Result<String> {
+    let bind = if advertise.is_some() { "0.0.0.0" } else { "127.0.0.1" };
+    let no_browser = advertise.is_some();
+
     let bind_addr = format!("{bind}:0");
     let listener = tokio::net::TcpListener::bind(&bind_addr)
         .await

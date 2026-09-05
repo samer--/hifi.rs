@@ -86,14 +86,10 @@ pub async fn make_client() -> Result<QobuzClient> {
 
 /// Perform an explicit OAuth login and return a ready client. Used by the
 /// `oauth` subcommand to force (re-)authentication.
-pub async fn oauth_login(
-    bind: &str,
-    advertise: Option<&str>,
-    no_browser: bool,
-) -> Result<QobuzClient> {
+pub async fn oauth_login(advertise: Option<&str>) -> Result<QobuzClient> {
     let mut client = api::new(None, None, None, None).await?;
 
-    oauth::login(&mut client, bind, advertise, no_browser).await?;
+    oauth::login(&mut client, advertise).await?;
     client.test_secrets().await?;
 
     if let Some(secret) = client.get_active_secret() {
@@ -158,7 +154,7 @@ pub async fn setup_client(client: &mut QobuzClient) -> Result<QobuzClient> {
             client.set_token(token);
         } else {
             info!("no cached token, performing OAuth login");
-            oauth::login(client, "127.0.0.1", None, false).await?;
+            oauth::login(client, None).await?;
             client.test_secrets().await?;
 
             if let Some(secret) = client.get_active_secret() {
