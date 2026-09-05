@@ -113,15 +113,7 @@ impl CursiveUI {
                 .child(
                     TextView::new("")
                         .style(Style::primary().combine(Effect::Dim))
-                        .with_name("current_track_id"),
-                )
-                .child(
-                    TextView::new("")
-                        .style(Style::primary().combine(Effect::Dim))
                         .with_name("current_track_url"),
-                        // .scrollable()
-                        // .show_scrollbars(false)
-                        // .scroll_x(true),
                 ),
         )
         .resized(SizeConstraint::Full, SizeConstraint::Free);
@@ -820,10 +812,6 @@ fn set_current_track(s: &mut Cursive, track: &Track, lt: &TrackListType) {
         track_title.set_content(track.title.trim());
         progress.set_max(track.duration_seconds as usize);
     }
-
-    s.call_on_name("current_track_id", |v: &mut TextView| {
-        v.set_content(format!("ID {}", track.id));
-    });
 
     if let Some(url) = &track.track_url {
         s.call_on_name("current_track_url", |v: &mut TextView| {
