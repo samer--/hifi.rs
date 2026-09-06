@@ -46,7 +46,7 @@
 	<div
 		class:marquee={$enableMarquee}
 		class:pl-[50%]={$enableMarquee}
-		class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-semibold py-2 whitespace-nowrap"
+		class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-bold py-2 whitespace-nowrap"
 	>
 		<span bind:offsetWidth={titleWidth}>
 			{$currentTrack?.title || ''}
@@ -67,7 +67,7 @@
 		<div
 			class:marquee={$enableMarquee}
 			class:pl-[50%]={$enableMarquee}
-			class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-semibold py-2 whitespace-nowrap"
+			class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-bold py-2 whitespace-nowrap"
 		>
 			{$currentTrack?.title || ''}
 			{#if $currentTrack.explicit}
