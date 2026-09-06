@@ -195,15 +195,9 @@ impl CursiveUI {
     pub fn global_events(&mut self) {
         self.root.clear_global_callbacks(Event::CtrlChar('c'));
 
-        self.root.set_on_pre_event(Event::CtrlChar('c'), move |s| {
-            let dialog = Dialog::text("Do you want to quit?")
-                .button("Yes", move |s: &mut Cursive| {
-                    s.quit();
-                })
-                .dismiss_button("No");
+        self.root.set_on_pre_event(Event::CtrlChar('c'), show_quit_dialog);
 
-            s.add_layer(dialog);
-        });
+        self.root.add_global_callback('q', show_quit_dialog);
 
         self.root.add_global_callback('1', move |s| {
             s.set_screen(0);
@@ -788,6 +782,16 @@ fn set_current_track(s: &mut Cursive, track: &Track, lt: &TrackListType) {
         bit_depth.set_content(format!("{} bits", track.bit_depth));
         sample_rate.set_content(format!("{} kHz", track.sampling_rate));
     }
+}
+
+fn show_quit_dialog(s: &mut Cursive) {
+    let dialog = Dialog::text("Do you want to quit?")
+        .button("Yes", move |s: &mut Cursive| {
+            s.quit();
+        })
+        .dismiss_button("No");
+
+    s.add_layer(dialog);
 }
 
 fn get_state_icon(state: GstState) -> String {
