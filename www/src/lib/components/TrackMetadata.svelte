@@ -27,7 +27,7 @@
 
 <div class="flex flex-col items-center">
 	<div class="px-4">{$entityTitle || ''}</div>
-	<div class="text-4xl text-amber-600">
+	<div class="text-4xl text-neutral-600">
 		<span class="text-2xl align-baseline">by</span>
 		{$currentTrack?.artist.name || ''}
 	</div>
@@ -41,7 +41,7 @@
 <div
 	bind:offsetWidth={titleWrapperWidth}
 	class:justify-center={!$enableMarquee}
-	class="bg-amber-900 flex flex-row relative overflow-hidden"
+	class="bg-neutral-900 flex flex-row relative overflow-hidden"
 >
 	<div
 		class:marquee={$enableMarquee}
@@ -98,7 +98,7 @@
 			{$durationString}
 		</span>
 	</div>
-	<div class="text-2xl md:text-3xl text-amber-500 grid grid-cols-3">
+	<div class="text-2xl md:text-3xl text-neutral-500 grid grid-cols-3">
 		<span class="bg-blue-800">
 			{$currentTrack?.bitDepth} bit
 		</span>
