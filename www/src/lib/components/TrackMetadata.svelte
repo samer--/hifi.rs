@@ -89,7 +89,7 @@
 </div>
 
 <div class="flex flex-col gap-y-4 max-w-xs mx-auto">
-	<div class="text-4xl md:text-5xl grid grid-cols-3">
+	<div class="text-3xl md:text-4xl grid grid-cols-3">
 		<span>
 			{$positionString}
 		</span>

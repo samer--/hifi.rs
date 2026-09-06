@@ -123,7 +123,7 @@
 					<path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
 				</svg>
 			</IconButton>
-			<span class="text-2xl xl:text-3xl">{Math.round($volume * 100)}%</span>
+			<span class="text-1xl xl:text-2xl">{Math.round($volume * 100)}%</span>
 			<IconButton onClick={() => controls?.volumeUp()} label="Increase volume">
 				<svg
 					class="w-6 h-6 lg:w-7 lg:h-7"
