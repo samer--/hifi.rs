@@ -143,6 +143,11 @@ impl CursiveUI {
                     .h_align(HAlign::Right)
                     .with_name("sample_rate"),
             )
+            .child(
+                TextView::new("100%")
+                    .h_align(HAlign::Right)
+                    .with_name("volume"),
+            )
             .fixed_width(8);
 
         let counter = Counter::new(0);
@@ -235,6 +240,14 @@ impl CursiveUI {
 
         self.root.add_global_callback('h', move |_| {
             block_on(async { player::jump_backward().await.expect("") });
+        });
+
+        self.root.add_global_callback('=', move |_| {
+            block_on(async { player::change_volume(0.05).await.expect("") });
+        });
+
+        self.root.add_global_callback('-', move |_| {
+            block_on(async { player::change_volume(-0.05).await.expect("") });
         });
     }
 
@@ -1034,6 +1047,13 @@ pub async fn receive_notifications() {
                         SINK.get().unwrap().send(Box::new(move |s| {
                             s.call_on_name("sample_rate", |view: &mut TextView| {
                                 view.set_content(format!("{} kHz", sampling_rate as f32 / 1000.));
+                            });
+                        })).expect("failed to send update");
+                    }
+                    Notification::Volume { volume } => {
+                        SINK.get().unwrap().send(Box::new(move |s| {
+                            s.call_on_name("volume", |view: &mut TextView| {
+                                view.set_content(format!("{:.0}%", volume * 100.0));
                             });
                         })).expect("failed to send update");
                     }

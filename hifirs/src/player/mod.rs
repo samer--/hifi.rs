@@ -256,6 +256,32 @@ pub fn duration() -> Option<ClockTime> {
     PLAYBIN.query_duration::<ClockTime>()
 }
 #[instrument]
+/// Current playback volume (0.0 to 1.0).
+pub fn volume() -> f64 {
+    PLAYBIN.property::<f64>("volume")
+}
+#[instrument]
+/// Set the playback volume (0.0 to 1.0).
+pub async fn set_volume(volume: f64) -> Result<()> {
+    let volume = volume.clamp(0.0, 1.0);
+
+    PLAYBIN.set_property("volume", volume);
+
+    BROADCAST_CHANNELS
+        .tx
+        .broadcast(Notification::Volume { volume })
+        .await?;
+
+    Ok(())
+}
+#[instrument]
+/// Adjust the playback volume by a delta (0.0 to 1.0).
+pub async fn change_volume(delta: f64) -> Result<()> {
+    let current = PLAYBIN.property::<f64>("volume");
+
+    set_volume(current + delta).await
+}
+#[instrument]
 /// Seek to a specified time in the current track.
 pub async fn seek(time: ClockTime, flags: Option<SeekFlags>) -> Result<()> {
     let flags = flags.unwrap_or(SeekFlags::FLUSH | SeekFlags::TRICKMODE_KEY_UNITS);
