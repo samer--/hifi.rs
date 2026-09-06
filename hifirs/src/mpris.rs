@@ -305,7 +305,7 @@ impl MprisPlayer {
         false
     }
     #[zbus(property, name = "Metadata")]
-    async fn metadata(&self) -> HashMap<&str, zvariant::Value> {
+    async fn metadata(&self) -> HashMap<&str, zvariant::Value<'_>> {
         debug!("signal metadata refresh");
         if let Some(current_track) = player::current_track().await {
             track_to_meta(
@@ -375,7 +375,7 @@ impl MprisTrackList {
     async fn get_tracks_metadata(
         &self,
         tracks: Vec<String>,
-    ) -> Vec<HashMap<&str, zvariant::Value>> {
+    ) -> Vec<HashMap<&str, zvariant::Value<'_>>> {
         debug!("get tracks metadata");
 
         player::current_tracklist()
