@@ -23,7 +23,7 @@ pub async fn init() -> Connection {
         can_stop: true,
         can_next: true,
         can_previous: true,
-        volume: 1.0,
+        volume: player::volume(),
     };
     let mpris_tracklist = MprisTrackList {};
 

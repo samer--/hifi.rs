@@ -8,6 +8,7 @@ use crate::{
         },
     },
     service::{Album, Playlist, SearchResults, Track},
+    sql::db,
     REFRESH_RESOLUTION,
 };
 use cached::proc_macro::cached;
@@ -149,6 +150,10 @@ pub async fn init(
     QUEUE.set(state).expect("error setting player state");
     QUIT_WHEN_DONE.store(quit_when_done, Ordering::Relaxed);
 
+    if let Some(volume) = db::get_volume().await {
+        PLAYBIN.set_property("volume", volume);
+    }
+
     Ok(())
 }
 #[instrument]
@@ -266,6 +271,7 @@ pub async fn set_volume(volume: f64) -> Result<()> {
     let volume = volume.clamp(0.0, 1.0);
 
     PLAYBIN.set_property("volume", volume);
+    db::set_volume(volume).await;
 
     BROADCAST_CHANNELS
         .tx

@@ -144,7 +144,7 @@ impl CursiveUI {
                     .with_name("sample_rate"),
             )
             .child(
-                TextView::new("100%")
+                TextView::new(format!("{:.0}%", player::volume() * 100.0))
                     .h_align(HAlign::Right)
                     .with_name("volume"),
             )
