@@ -20,7 +20,7 @@
 		<IconButton onClick={toggleList} label={$showList ? 'Close' : 'Menu'}>
 			{#if $showList}
 				<svg
-					class="w-6 h-6 lg:w-7 lg:h-7"
+					class="w-8 h-8 lg:w-10 lg:h-10"
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
@@ -33,7 +33,7 @@
 				</svg>
 			{:else}
 				<svg
-					class="w-6 h-6 lg:w-7 lg:h-7"
+					class="w-8 h-8 lg:w-10 lg:h-10"
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
@@ -51,7 +51,7 @@
 	<div class="flex flex-row justify-end gap-x-4 flex-grow">
 		<IconButton onClick={() => controls?.previous()} label="Previous">
 			<svg
-				class="w-6 h-6 lg:w-7 lg:h-7"
+				class="w-8 h-8 lg:w-10 lg:h-10"
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"
@@ -69,7 +69,7 @@
 		>
 			{#if $currentStatus === 'Playing'}
 				<svg
-					class="w-6 h-6 lg:w-7 lg:h-7"
+					class="w-8 h-8 lg:w-10 lg:h-10"
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
@@ -82,7 +82,7 @@
 				</svg>
 			{:else}
 				<svg
-					class="w-6 h-6 lg:w-7 lg:h-7"
+					class="w-8 h-8 lg:w-10 lg:h-10"
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
@@ -96,7 +96,7 @@
 		</IconButton>
 		<IconButton onClick={() => controls?.next()} label="Next">
 			<svg
-				class="w-6 h-6 lg:w-7 lg:h-7"
+				class="w-8 h-8 lg:w-10 lg:h-10"
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"
@@ -111,7 +111,7 @@
 		<div class="flex flex-row items-center gap-x-2">
 			<IconButton onClick={() => controls?.volumeDown()} label="Decrease volume">
 				<svg
-					class="w-6 h-6 lg:w-7 lg:h-7"
+					class="w-8 h-8 lg:w-10 lg:h-10"
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
@@ -123,10 +123,10 @@
 					<path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
 				</svg>
 			</IconButton>
-			<span class="text-1xl xl:text-2xl">{Math.round($volume * 100)}%</span>
+			<span class="text-xl xl:text-2xl">{Math.round($volume * 100)}%</span>
 			<IconButton onClick={() => controls?.volumeUp()} label="Increase volume">
 				<svg
-					class="w-6 h-6 lg:w-7 lg:h-7"
+					class="w-8 h-8 lg:w-10 lg:h-10"
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"

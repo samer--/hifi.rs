@@ -27,11 +27,11 @@
 
 <div class="flex flex-col items-center">
 	<div class="px-4">{$entityTitle || ''}</div>
-	<div class="text-4xl text-neutral-600">
-		<span class="text-2xl align-baseline">by</span>
+	<div class="text-4xl md:text-4xl text-neutral-500">
+		<span class="text-2xl md:text-3xl align-baseline">by</span>
 		{$currentTrack?.artist.name || ''}
 	</div>
-	<div class="text-2xl xl:text-4xl mt-4 xl:mt-8 flex flex-row items-center gap-x-8">
+	<div class="text-2xl xl:text-4xl mt-3 xl:mt-8 flex flex-row items-center gap-x-8">
 		<span class="font-bold bg-blue-950 px-2">{$currentTrack.number}</span>
 		<span class="text-2xl">of</span>
 		<span class="font-bold bg-blue-950 px-2">{$numOfTracks}</span>
@@ -46,7 +46,7 @@
 	<div
 		class:marquee={$enableMarquee}
 		class:pl-[50%]={$enableMarquee}
-		class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-bold py-2 whitespace-nowrap"
+		class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-bold py-1 whitespace-nowrap"
 	>
 		<span bind:offsetWidth={titleWidth}>
 			{$currentTrack?.title || ''}
@@ -67,7 +67,7 @@
 		<div
 			class:marquee={$enableMarquee}
 			class:pl-[50%]={$enableMarquee}
-			class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-bold py-2 whitespace-nowrap"
+			class="md:py-4 flex flex-row leading-[1.15em] xl:py-8 font-bold py-1 whitespace-nowrap"
 		>
 			{$currentTrack?.title || ''}
 			{#if $currentTrack.explicit}
@@ -88,8 +88,8 @@
 	></div>
 </div>
 
-<div class="flex flex-col gap-y-4 max-w-xs mx-auto">
-	<div class="text-3xl md:text-4xl grid grid-cols-3">
+<div class="flex flex-col gap-y-3 max-w-xs mx-auto">
+	<div class="text-2xl md:text-3xl grid grid-cols-3">
 		<span>
 			{$positionString}
 		</span>
@@ -98,12 +98,11 @@
 			{$durationString}
 		</span>
 	</div>
-	<div class="text-2xl md:text-3xl text-neutral-500 grid grid-cols-3">
-		<span class="bg-blue-800">
+	<div class="text-2xl md:text-3xl text-neutral-500 grid grid-cols-2">
+		<span class="bg-blue-900">
 			{$currentTrack?.bitDepth} bit
 		</span>
-		<span>&nbsp;</span>
-		<span class="bg-blue-800">
+		<span class="bg-blue-900">
 			{$currentTrack?.samplingRate} kHz
 		</span>
 	</div>
