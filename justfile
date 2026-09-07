@@ -25,6 +25,7 @@ docker-build-linux arch=arch():
   docker build -f Dockerfile.{{arch}} -t hifirs .
   docker cp $(docker create hifirs:latest):hifi-rs .
 
+# NB: if you change this, also change the steps in Dockerfile.aarch64
 build-player target=detected_target $DATABASE_URL="sqlite:///tmp/data.db":
   just install-deps {{target}}
   just build-www

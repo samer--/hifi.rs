@@ -12,9 +12,20 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash 
 
 WORKDIR /app
 
+COPY justfile justfile
+
+# Unwrap build-player target to take advantage of caching
+RUN just install-deps aarch64-unknown-linux-gnu
+RUN just add-target aarch64-unknown-linux-gnu
+RUN just install-toolchain "stable" aarch64-unknown-linux-gnu
+RUN just install-sqlx
+
 COPY . .
 
-RUN just build-player aarch64-unknown-linux-gnu
+ARG DATABASE_URL="sqlite:///tmp/data.db"
+RUN just reset-database
+RUN just build-www
+RUN just build-bin hifi-rs aarch64-unknown-linux-gnu
 
 RUN mv target/aarch64-unknown-linux-gnu/release/hifi-rs /usr/local/bin
 
