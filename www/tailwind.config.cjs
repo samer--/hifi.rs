@@ -8,7 +8,7 @@ const config = {
 		extend: {
 			fontFamily: {
 				serif: ['Bitter', ...defaultTheme.fontFamily.serif],
-				sans: ['HandJet', ...defaultTheme.fontFamily.sans]
+				sans: ['Lato', ...defaultTheme.fontFamily.sans]
 			}
 		}
 	},

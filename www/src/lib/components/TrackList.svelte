@@ -19,7 +19,7 @@
 		tabindex="0"
 		style:padding-bottom={`${$navHeight + 32}px`}
 		transition:fly={{ duration: 300, easing: quintOut, x: '100%' }}
-		class="fixed h-[100dvh] md:!pb-0 md:h-full md:absolute z-10 flex flex-col backdrop-blur-sm bg-opacity-90 w-full text-left top-0 right-0 bg-amber-950"
+		class="fixed h-[100dvh] md:!pb-0 md:h-full md:absolute z-10 flex flex-col backdrop-blur-sm bg-opacity-90 w-full text-left top-0 right-0 bg-neutral-950"
 	>
 		<div class="text-2xl xl:text-4xl grid grid-cols-3 bg-blue-950">
 			<button

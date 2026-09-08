@@ -121,9 +121,9 @@
 	</List>
 
 	{#if $showArtistAlbums}
-		<div class="absolute w-full h-full flex flex-col bg-amber-950 top-0 left-0">
-			<div class="flex flex-row justify-between py-4 bg-amber-900 px-4">
-				<h2>albums by <span class="font-bold text-amber-500">{$artistName}</span></h2>
+		<div class="absolute w-full h-full flex flex-col bg-neutral-950 top-0 left-0">
+			<div class="flex flex-row justify-between py-4 bg-neutral-900 px-4">
+				<h2>albums by <span class="font-bold text-neutral-500">{$artistName}</span></h2>
 				<button on:click={() => showArtistAlbums.set(false)}>close</button>
 			</div>
 			<div class="overflow-y-scroll p-4">
