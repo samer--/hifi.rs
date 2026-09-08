@@ -35,6 +35,9 @@ pub enum Notification {
         bitdepth: u32,
         sampling_rate: u32,
     },
+    Volume {
+        volume: f64,
+    },
     Quit,
     Loading {
         is_loading: bool,

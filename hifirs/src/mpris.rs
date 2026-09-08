@@ -23,6 +23,7 @@ pub async fn init() -> Connection {
         can_stop: true,
         can_next: true,
         can_previous: true,
+        volume: player::volume(),
     };
     let mpris_tracklist = MprisTrackList {};
 
@@ -187,6 +188,20 @@ pub async fn receive_notifications(conn: &Connection) {
                     bitdepth: _,
                     sampling_rate: _,
                 } => {}
+                Notification::Volume { volume } => {
+                    let iface_ref = object_server
+                        .interface::<_, MprisPlayer>("/org/mpris/MediaPlayer2")
+                        .await
+                        .expect("failed to get object server");
+
+                    let mut iface = iface_ref.get_mut().await;
+                    iface.volume = volume;
+
+                    iface
+                        .volume_changed(iface_ref.signal_context())
+                        .await
+                        .expect("failed to signal volume change");
+                }
             }
         }
     }
@@ -243,6 +258,7 @@ pub struct MprisPlayer {
     can_stop: bool,
     can_next: bool,
     can_previous: bool,
+    volume: f64,
 }
 
 #[interface(name = "org.mpris.MediaPlayer2.Player")]
@@ -318,7 +334,17 @@ impl MprisPlayer {
     }
     #[zbus(property, name = "Volume")]
     fn volume(&self) -> f64 {
-        1.0
+        self.volume
+    }
+    #[zbus(property, name = "Volume")]
+    async fn set_volume(&mut self, value: f64) -> zbus::fdo::Result<()> {
+        self.volume = value;
+
+        if let Err(error) = player::set_volume(value).await {
+            debug!(?error);
+        }
+
+        Ok(())
     }
     #[zbus(property, name = "Position")]
     async fn position(&self) -> i64 {

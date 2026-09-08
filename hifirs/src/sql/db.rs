@@ -161,7 +161,8 @@ pub async fn get_config() -> Option<ApiConfig> {
     if let Ok(mut conn) = acquire!() {
         if let Ok(conf) = get_one!(
             r#"
-            SELECT * FROM config
+            SELECT username, password, default_quality, user_token, active_secret, app_id, private_key
+            FROM config
             WHERE ROWID = 1;
             "#,
             ApiConfig,
@@ -171,6 +172,32 @@ pub async fn get_config() -> Option<ApiConfig> {
         } else {
             None
         }
+    } else {
+        None
+    }
+}
+
+pub async fn set_volume(volume: f64) {
+    if let Ok(mut conn) = acquire!() {
+        query!(
+            r#"
+            UPDATE config
+            SET volume=?1
+            WHERE ROWID = 1
+            "#,
+            conn,
+            volume
+        );
+    }
+}
+
+pub async fn get_volume() -> Option<f64> {
+    if let Ok(mut conn) = acquire!() {
+        sqlx::query_scalar!("SELECT volume FROM config WHERE ROWID = 1")
+            .fetch_optional(&mut *conn)
+            .await
+            .ok()
+            .flatten()
     } else {
         None
     }

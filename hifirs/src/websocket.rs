@@ -118,6 +118,12 @@ async fn handle_connection(socket: WebSocket) {
             sender.send(Message::Text(s)).await.expect("error");
         }
 
+        if let Ok(v) = serde_json::to_string(&Notification::Volume {
+            volume: player::volume(),
+        }) {
+            sender.send(Message::Text(v)).await.expect("error");
+        }
+
         let mut rt_stream = rt_receiver.stream();
 
         loop {
@@ -164,6 +170,11 @@ async fn handle_connection(socket: WebSocket) {
                                 Action::SkipTo { num } => player::skip(num, true).await.expect(""),
                                 Action::JumpForward => player::jump_forward().await.expect(""),
                                 Action::JumpBackward => player::jump_backward().await.expect(""),
+                                Action::VolumeUp => player::change_volume(0.05).await.expect(""),
+                                Action::VolumeDown => player::change_volume(-0.05).await.expect(""),
+                                Action::SetVolume { volume } => {
+                                    player::set_volume(volume).await.expect("")
+                                }
                                 Action::PlayAlbum { album_id } => {
                                     player::play_album(&album_id).await.expect("")
                                 }

@@ -1,7 +1,7 @@
 <script>
 	import { afterUpdate } from 'svelte';
 	import Button from './Button.svelte';
-	import { currentStatus } from '$lib/websocket';
+	import { currentStatus, volume } from '$lib/websocket';
 
 	export let showList, toggleList, controls, navHeight;
 
@@ -29,6 +29,11 @@
 			{/if}
 		</Button>
 		<Button onClick={() => controls?.next()}>Next</Button>
+		<div class="flex flex-row items-center gap-x-2">
+			<Button onClick={() => controls?.volumeDown()}>-</Button>
+			<span class="text-2xl xl:text-3xl">{Math.round($volume * 100)}%</span>
+			<Button onClick={() => controls?.volumeUp()}>+</Button>
+		</div>
 	</div>
 </div>
 
